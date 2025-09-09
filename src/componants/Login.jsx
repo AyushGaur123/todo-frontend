@@ -5,11 +5,16 @@ import { useForm } from "react-hook-form";
 function Login() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [errorMsg, setErrorMsg] = useState("");
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false); 
+  const navigate = useNavigate();
+
+  const API_URL = "https://my-backend-1-2jy2.onrender.com"
+  // const API_URL = "http://localhost:3000";
 
   const onsubmit = async (data) => {
+    setLoading(true); 
     try {
-      const res = await fetch("https://my-backend-1-2jy2.onrender.com/login", {
+      const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -28,6 +33,8 @@ function Login() {
       }
     } catch (err) {
       setErrorMsg("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -64,10 +71,43 @@ function Login() {
                     Sign Up
                   </Link>
                 </p>
+
                 <button
                   type="submit"
-                  className="bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 active:scale-95 transition transform duration-150">
-                  Login
+                  disabled={loading}
+                  className={`w-full py-2 rounded-lg text-white transition transform duration-150 ${
+                    loading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-purple-600 hover:bg-purple-700 active:scale-95"
+                  }`}
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                        ></path>
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
             </div>

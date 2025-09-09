@@ -1,44 +1,47 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import {  useNavigate } from "react-router-dom";
-import { useState } from 'react';
+
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const navigate = useNavigate()
-    const [errorMsg, setErrorMsg] = useState("");
-  
+  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false); 
 
+  const API_URL = "https://my-backend-1-2jy2.onrender.com"
+  // const API_URL = "http://localhost:3000";
 
-const onsubmit = async (data) => {
-  try {
-    const res = await fetch("https://my-backend-1-2jy2.onrender.com/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+  const onsubmit = async (data) => {
+    setLoading(true); 
+    try {
+      const res = await fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    if (!res.ok) {
-      setErrorMsg(result.msg || "Something went wrong. Please try again.");
-      return;
+      if (!res.ok) {
+        setErrorMsg(result.msg || "Something went wrong. Please try again.");
+        return;
+      }
+
+      alert(result.msg || "Signup successful!");
+      setErrorMsg("");
+      reset();
+      navigate("/login");
+    } catch (err) {
+      setErrorMsg("Failed to connect to server. Please try again later.");
+    } finally {
+      setLoading(false); 
     }
-
-    alert(result.msg || "Signup successful!");
-    setErrorMsg("");
-    reset();
-    navigate("/login");
-  } catch (err) {
-    setErrorMsg("Failed to connect to server. Please try again later.");
-  }
-};
-
+  };
 
   return (
     <div className="h-[91.9vh] bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-gray-900">
-
-      <main className="flex justify-center  ">
+      <main className="flex justify-center">
         <div className="w-full max-w-3xl">
           <div>
             <div className="flex justify-center mt-6 min-h-[40vh]">
@@ -46,14 +49,15 @@ const onsubmit = async (data) => {
                 <h2 className="text-2xl font-bold text-center text-purple-700 mb-6">
                   Signup
                 </h2>
-                <form onSubmit={handleSubmit(onsubmit)} className="flex flex-col gap-4">
-               
+                <form
+                  onSubmit={handleSubmit(onsubmit)}
+                  className="flex flex-col gap-4"
+                >
                   <input
                     type="text"
                     placeholder="Username"
                     {...register("username", {
                       required: true,
-                     
                       maxLength: {
                         value: 10,
                         message: "Username cannot exceed 10 characters",
@@ -62,7 +66,9 @@ const onsubmit = async (data) => {
                     className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 outline-none"
                   />
                   {errors.username && (
-                    <p className="text-red-500 text-sm">{errors.username.message}</p>
+                    <p className="text-red-500 text-sm">
+                      {errors.username.message}
+                    </p>
                   )}
 
                   <input
@@ -77,15 +83,48 @@ const onsubmit = async (data) => {
                     {...register("password", { required: true })}
                     className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 outline-none"
                   />
-                   {errorMsg && (
-                  <p className="text-red-600 text-center ">{errorMsg}</p>
-                   )}
+
+                  {errorMsg && (
+                    <p className="text-red-600 text-center">{errorMsg}</p>
+                  )}
 
                   <button
-                  type="submit"
-                  className="bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 active:scale-95 transition transform duration-150">
-                  Signup
-                </button>
+                    type="submit"
+                    disabled={loading}
+                    className={`w-full py-2 rounded-lg text-white transition transform duration-150 ${
+                      loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-purple-600 hover:bg-purple-700 active:scale-95"
+                    }`}
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center">
+                        <svg
+                          className="animate-spin h-5 w-5 mr-2 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                          ></path>
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : (
+                      "Signup"
+                    )}
+                  </button>
                 </form>
               </div>
             </div>
@@ -93,7 +132,7 @@ const onsubmit = async (data) => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

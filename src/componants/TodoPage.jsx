@@ -9,6 +9,9 @@ function TodoPage() {
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null); 
 
+  const  API_URL = "https://my-backend-1-2jy2.onrender.com"
+  // const API_URL = " http://localhost:3000"
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
@@ -25,7 +28,7 @@ function TodoPage() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const res = await fetch("https://my-backend-1-2jy2.onrender.com/todos", {
+      const res = await fetch(`${API_URL}/todos`, {
         headers: { Authorization: token },
       });
       const data = await res.json();
@@ -41,7 +44,7 @@ function TodoPage() {
     try {
       const token = localStorage.getItem("token");
       const promises = todos.map((t) =>
-        fetch("https://my-backend-1-2jy2.onrender.com/todos", {
+        fetch(`${API_URL}/todos`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: token },
           body: JSON.stringify({ todo: t.todo, isCompleted: t.isCompleted }),
@@ -62,7 +65,8 @@ function TodoPage() {
       if (user && !editingId.startsWith("demo-")) {
         try {
           const token = localStorage.getItem("token");
-          await fetch(`https://my-backend-1-2jy2.onrender.com/todos/${editingId}`, {
+          // await fetch(`https://my-backend-1-2jy2.onrender.com/todos/${editingId}`, {
+          await fetch(`${API_URL}/todos/${editingId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json", Authorization: token },
             body: JSON.stringify({ todo }),
@@ -80,7 +84,7 @@ function TodoPage() {
       if (user) {
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch("https://my-backend-1-2jy2.onrender.com/todos", {
+          const res = await fetch(`${API_URL}/todos`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: token },
             body: JSON.stringify({ todo }),
@@ -104,7 +108,7 @@ function TodoPage() {
     if (user && !id.startsWith("demo-")) {
       try {
         const token = localStorage.getItem("token");
-        await fetch(`https://my-backend-1-2jy2.onrender.com/todos/${id}`, {
+        await fetch(`${API_URL}/todos/${id}`, {
           method: "DELETE",
           headers: { Authorization: token },
         });
@@ -123,7 +127,7 @@ function TodoPage() {
     if (user && !id.startsWith("demo-")) {
       try {
         const token = localStorage.getItem("token");
-        await fetch(`https://my-backend-1-2jy2.onrender.com/todos/${id}`, {
+        await fetch(`${API_URL}/todos/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json", Authorization: token },
           body: JSON.stringify({ isCompleted: !isCompleted }),

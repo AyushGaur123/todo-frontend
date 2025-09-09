@@ -10,11 +10,15 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
+    const API_URL = "https://my-backend-1-2jy2.onrender.com"
+
+  // const API_URL = " http://localhost:3000"
+
   useEffect(() => {
     if (!token) return;
 
     const fetchProfile = async () => {
-      const res = await fetch(`https://my-backend-1-2jy2.onrender.com/profile`, {
+      const res = await fetch(`${API_URL}/profile`, {
         headers: { Authorization: `${token}` },
       });
       const result = await res.json();
