@@ -5,14 +5,14 @@ import { useForm } from "react-hook-form";
 function Login() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [errorMsg, setErrorMsg] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const API_URL = "https://my-backend-1-2jy2.onrender.com"
   // const API_URL = "http://localhost:3000";
 
   const onsubmit = async (data) => {
-    setLoading(true); 
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/login`, {
         method: "POST",
@@ -34,7 +34,7 @@ function Login() {
     } catch (err) {
       setErrorMsg("Something went wrong. Please try again.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -72,14 +72,19 @@ function Login() {
                   </Link>
                 </p>
 
+                <p className="text-sm text-center mt-2">
+                  <Link to="/forgot-password" className="text-indigo-600 hover:underline">
+                    Forgot Password?
+                  </Link>
+                </p>
+
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full py-2 rounded-lg text-white transition transform duration-150 ${
-                    loading
+                  className={`w-full py-2 rounded-lg text-white transition transform duration-150 ${loading
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-purple-600 hover:bg-purple-700 active:scale-95"
-                  }`}
+                    }`}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">

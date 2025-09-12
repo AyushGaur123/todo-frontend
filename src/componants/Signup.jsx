@@ -1,4 +1,5 @@
 
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +8,13 @@ const Signup = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
-  const API_URL = "https://my-backend-1-2jy2.onrender.com"
+  const API_URL = "https://my-backend-1-2jy2.onrender.com";
   // const API_URL = "http://localhost:3000";
 
   const onsubmit = async (data) => {
-    setLoading(true); 
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/signup`, {
         method: "POST",
@@ -28,14 +29,17 @@ const Signup = () => {
         return;
       }
 
-      alert(result.msg || "Signup successful!");
+      alert("OTP has been sent to your email. Please verify.");
       setErrorMsg("");
       reset();
-      navigate("/login");
+
+     
+      navigate("/verify", { state: { email: data.email, purpose: "signup" } });
+
     } catch (err) {
       setErrorMsg("Failed to connect to server. Please try again later.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -136,3 +140,4 @@ const Signup = () => {
 };
 
 export default Signup;
+

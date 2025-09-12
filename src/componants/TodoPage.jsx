@@ -65,7 +65,6 @@ function TodoPage() {
       if (user && !editingId.startsWith("demo-")) {
         try {
           const token = localStorage.getItem("token");
-          // await fetch(`https://my-backend-1-2jy2.onrender.com/todos/${editingId}`, {
           await fetch(`${API_URL}/todos/${editingId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json", Authorization: token },
