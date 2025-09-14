@@ -9,14 +9,17 @@ import Services from "./componants/Services";
 import Verify from "./componants/Verify"
 import Forget from "./componants/Forget";
 import Reset from "./componants/Reset";
+import "./index.css"
 
 const Layout=()=> {
   return (
     <>
-      <Navbar />
-
-          <Outlet />
+       <main className="h-screen overflow-y-auto scrollbar-hide">
+       <Navbar />
       
+      <Outlet />
+      
+     </main>
 
     </>
   );
